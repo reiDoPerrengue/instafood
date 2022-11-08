@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="minimum-scale=1.0, width=device-width, maximum-scale=1, user-scalable=no" name="viewport" />
+    <link rel="stylesheet" href="/css/cadastro/all cd-clientes.css" media="screen">
+    <link rel="shortcut icon" href="/design/icon.png" type="image/x-icon">
+    <title>Cadastro Cliente | InstaFood</title>
+    <!-- Tela de cadastro de clientes-->
+</head>
+<body>
+    <main>
+        <img class="logo" src="/design/icon-white.png" alt="InstaFood">
+
+
+        <section class="main-section">
+
+            <div class="titleForm">
+                <h1>Cliente</h1>
+            </div>
+
+            <div class="form">
+                <label for="username">Nome</label>
+                <input type="text" id="username" class="username" placeholder="Nome completo">
+                <span style="display: none; color: red;" id="msgError">Campo Inválido</span>
+
+                <label for="email">E-mail</label>
+                <input type="email" id="email" class="email" placeholder="Digite seu E-mail">
+                <span style="display: none; color: red;" id="msgError">Campo Inválido</span>
+
+                <label for="password">Senha</label>
+                <input type="password" id="password" class="password" placeholder="Digite sua senha">
+                <span style="display: none; color: red;" id="msgError">Campo Inválido</span>
+
+                <button id="btnNext" class="btn-next">Avançar</button><!-- Fazer as funções no js -->
+
+                <span class="tem-conta">Já tem uma conta? <a class="login" href="./login.html">Faça seu login</a></span>
+            </div>
+        </section>
+    </main>
+
+    <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-app.js";
+    import { getDatabase, set, ref } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-database.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.12.1/firebase-auth.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+    apiKey: "AIzaSyD-f5F_3iKY8Mzc99lWE5VQCgCFgGB7GbU",
+    authDomain: "instafood-7663f.firebaseapp.com",
+    databaseURL: "https://instafood-7663f-default-rtdb.firebaseio.com",
+    projectId: "instafood-7663f",
+    storageBucket: "instafood-7663f.appspot.com",
+    messagingSenderId: "33148869083",
+    appId: "1:33148869083:web:031e021c72523958866ffe"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const auth = getAuth();
+
+    const btnNext = document.getElementById("btnNext");
+
+    btnNext.addEventListener("click",(e) => {
+
+        var username = document.getElementById("username").value;
+        var email = document.getElementById("email").value;
+        var password = document.getElementById("password").value;
+
+        createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            
+            set(ref(database, "user/" + user.uid),{
+                username: username,
+                email: email,
+            })
+            window.location.href = "./home-cliente.html"
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            
+            alert(errorMessage);
+        });
+
+    })
+
+    </script>
+</body>
+</html>
